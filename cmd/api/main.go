@@ -58,7 +58,7 @@ func main() {
 	}
 
 	// HTTP server
-	router := httpx.NewRouter(logger)
+	router := httpx.NewRouter(logger, db)
 	srv := &http.Server{
 		Addr:              cfg.HTTPAddr,
 		Handler:           router,
