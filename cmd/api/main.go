@@ -57,6 +57,10 @@ func main() {
 		return
 	}
 
+	// Auto-run migrations on normal startup (no flags)
+	pg.MustExecFile(ctx, db, "migrations/0001_init.sql")
+	pg.MustExecFile(ctx, db, "migrations/0002_indexes.sql")
+
 	// HTTP server
 	router := httpx.NewRouter(logger, db)
 	srv := &http.Server{

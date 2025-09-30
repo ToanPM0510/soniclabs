@@ -6,6 +6,8 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: app
     ports: ["5432:5432"]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
       interval: 2s
@@ -14,11 +16,14 @@ services:
   redis:
     image: redis:7
     ports: ["6379:6379"]
+    volumes:
+      - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli","ping"]
       interval: 2s
       timeout: 2s
       retries: 30
+  
   api:
     build: .
     environment:
@@ -30,4 +35,7 @@ services:
       pg: { condition: service_healthy }
       redis: { condition: service_healthy }
     ports: ["8080:8080"]
-    command: ["/app/api", "--migrate"]
+
+volumes:
+  postgres_data:
+  redis_data:
